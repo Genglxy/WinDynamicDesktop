@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -84,7 +85,19 @@ namespace WinDynamicDesktop
 
         public static Image ScaleImage(string filename, Size size)
         {
-            return ScaleImage(Image.FromFile(filename), size);
+            using (var image = new MagickImage(filename))
+            {
+                image.Format = MagickFormat.Jpeg;
+
+                // Create byte array that contains a jpeg file
+                byte[] data = image.ToByteArray();
+
+                using (var ms = new MemoryStream(data))
+                {
+                    return ScaleImage(Image.FromStream(ms), size);
+                }
+
+            }
         }
 
         public static Image GetThumbnailImage(ThemeConfig theme, Size size, bool useCache)
