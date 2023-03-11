@@ -89,14 +89,10 @@ namespace WinDynamicDesktop
             {
                 image.Format = MagickFormat.Jpeg;
 
-                // Create byte array that contains a jpeg file
-                byte[] data = image.ToByteArray();
-
-                using (var ms = new MemoryStream(data))
+                using (var ms = new MemoryStream(image.ToByteArray()))
                 {
                     return ScaleImage(Image.FromStream(ms), size);
                 }
-
             }
         }
 
